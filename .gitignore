@@ -2,4 +2,7 @@
 /.idea/libraries/
 /.idea/cssxfire.xml
 /.idea/workspace.xml
+/.idea/
 .DS_Store
+
+/StormpathPlugin.iml

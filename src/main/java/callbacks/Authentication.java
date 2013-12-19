@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013 dc-square GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package callbacks;
 
 import com.dcsquare.hivemq.spi.callback.CallbackPriority;
@@ -21,8 +37,9 @@ import org.slf4j.LoggerFactory;
 
 public class Authentication implements OnAuthenticationCallback {
 
-    Logger log = LoggerFactory.getLogger(OnAuthenticationCallback.class);
-    Application application;
+    protected final Logger log = LoggerFactory.getLogger(OnAuthenticationCallback.class);
+    protected final Application application;
+    protected Account account;
 
     @Inject
     public Authentication(Application application) {
@@ -54,13 +71,13 @@ public class Authentication implements OnAuthenticationCallback {
             }
         }
 
-        Account account = getAuthenticatedAccount(username, password);
+        account = getAuthenticatedAccount(username, password);
         if (account != null) {
             log.info("Authentication successful " + clientData.getClientId());
             return true;
         }
         log.info("Authentication failed " + clientData.getClientId());
-        throw new AuthenticationException("Invalid username or password", ReturnCode.REFUSED_NOT_AUTHORIZED);
+        return false;
     }
 
     @Override
@@ -68,8 +85,8 @@ public class Authentication implements OnAuthenticationCallback {
         return CallbackPriority.MEDIUM;
     }
 
-    private Account getAuthenticatedAccount(String username, String password) {
-        AuthenticationRequest request = new UsernamePasswordRequest(username, password);
+    private Account getAuthenticatedAccount(final String username, final String password) {
+        final AuthenticationRequest request = new UsernamePasswordRequest(username, password);
 
         try {
             return application.authenticateAccount(request).getAccount();
