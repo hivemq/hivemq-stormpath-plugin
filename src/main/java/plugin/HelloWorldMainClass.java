@@ -20,24 +20,19 @@ import javax.inject.Inject;
  */
 public class HelloWorldMainClass extends PluginEntryPoint {
     private Client client;
-    private Application application;
+//    private Application application;
 
     Logger log = LoggerFactory.getLogger(HelloWorldMainClass.class);
 
     private final Configuration configuration;
-    private HiveMQStart startCallback;
-    private ClientConnect connectCallback;
     private Authentication authentication;
 
     /**
      * @param configuration Injected configuration, which is declared in the {@link HelloWorldPluginModule}.
      */
     @Inject
-    public HelloWorldMainClass(Configuration configuration,
-                               HiveMQStart startCallback, ClientConnect connectCallback, Authentication authentication) {
+    public HelloWorldMainClass(Configuration configuration, Authentication authentication) {
         this.configuration = configuration;
-        this.startCallback = startCallback;
-        this.connectCallback = connectCallback;
         this.authentication = authentication;
     }
 
@@ -49,13 +44,5 @@ public class HelloWorldMainClass extends PluginEntryPoint {
     public void postConstruct() {
         CallbackRegistry callbackRegistry = getCallbackRegistry();
         callbackRegistry.addCallback(authentication);
-
-        //Not used currently. For logging only
-        callbackRegistry.addCallback(startCallback);
-        callbackRegistry.addCallback(connectCallback);
-        callbackRegistry.addCallback(new ClientDisconnect());
-        callbackRegistry.addCallback(new PublishReceived());
-
-
     }
 }

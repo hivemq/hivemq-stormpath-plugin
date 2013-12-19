@@ -34,7 +34,6 @@ import static com.dcsquare.hivemq.spi.config.Configurations.newReloadablePropert
 public class HelloWorldPluginModule extends HiveMQPluginModule {
 
     Logger log = LoggerFactory.getLogger(OnAuthenticationCallback.class);
-    private Client client;
 
     /**
      * This method can be used to add own configuration items for the plugin. The method accepts an
@@ -60,9 +59,6 @@ public class HelloWorldPluginModule extends HiveMQPluginModule {
      */
     @Override
     protected void configurePlugin() {
-        String path = "/Users/lbrandl/Stormpath/apiKey.properties";
-        client = new ClientBuilder().setApiKeyFileLocation(path).build();
-
     }
 
     /**
@@ -75,16 +71,24 @@ public class HelloWorldPluginModule extends HiveMQPluginModule {
         return HelloWorldMainClass.class;
     }
 
-    @Provides
-    @Singleton
-    private Application registerApplication(Configuration configuration) {
-        Application application = client.instantiate(Application.class);
-        application.setName("plugin");
-        String applicationName = configuration.getString("applicationName");
-        System.out.println(applicationName);
-        application = client.getCurrentTenant()
-                .createApplication(Applications.newCreateRequestFor(application).createDirectory().build());
-        return application;
-    }
+//    @Provides
+//    @Singleton
+//    private Application registerApplication(Configuration configuration) {
+//        try{
+//        final String path = configuration.getString("apiKeyPath")+"/apiKey.properties";
+//        final Client client = new ClientBuilder().setApiKeyFileLocation(path).build();
+//        final String applicationName = configuration.getString("applicationName");
+//
+//
+//        Application application = client.instantiate(Application.class);
+//        application.setName(applicationName);
+////        application = client.getCurrentTenant()
+////                .createApplication(Applications.newCreateRequestFor(application).createDirectory().build());
+//        return application;
+//        }catch (Exception e){
+//            log.info(e.getMessage());
+//        }
+//        return null;
+//    }
 
 }

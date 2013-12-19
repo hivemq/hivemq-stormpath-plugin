@@ -93,7 +93,7 @@
                                 <configuration>
                                     <hiveMQDir>/Applications/hivemq-1.4.3</hiveMQDir>
                                     <debugMode>
-                                        NONE
+                                        SERVER
                                     </debugMode>
                                 </configuration>
                             </execution>
