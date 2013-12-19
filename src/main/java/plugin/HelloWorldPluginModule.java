@@ -8,9 +8,11 @@ import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.stormpath.sdk.application.Application;
+import com.stormpath.sdk.application.ApplicationList;
 import com.stormpath.sdk.application.Applications;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.client.ClientBuilder;
+import com.stormpath.sdk.tenant.Tenant;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -71,24 +73,36 @@ public class HelloWorldPluginModule extends HiveMQPluginModule {
         return HelloWorldMainClass.class;
     }
 
-//    @Provides
-//    @Singleton
-//    private Application registerApplication(Configuration configuration) {
-//        try{
-//        final String path = configuration.getString("apiKeyPath")+"/apiKey.properties";
-//        final Client client = new ClientBuilder().setApiKeyFileLocation(path).build();
-//        final String applicationName = configuration.getString("applicationName");
-//
-//
-//        Application application = client.instantiate(Application.class);
-//        application.setName(applicationName);
-////        application = client.getCurrentTenant()
-////                .createApplication(Applications.newCreateRequestFor(application).createDirectory().build());
-//        return application;
-//        }catch (Exception e){
-//            log.info(e.getMessage());
-//        }
-//        return null;
-//    }
+    @Provides
+    @Singleton
+    private Application registerApplication(Configuration configuration) {
+        try {
+            final String path = configuration.getString("apiKeyPath") + "/apiKey.properties";
+            final Client client = new ClientBuilder().setApiKeyFileLocation(path).build();
+            final String applicationName = configuration.getString("applicationName");
+
+            Tenant tenant = client.getCurrentTenant();
+            Application currentApplication = null;
+
+            ApplicationList applications = tenant.getApplications();
+            for (Application application : applications) {
+                if (application.getName().equals(applicationName)) {
+                    currentApplication = application;
+                }
+            }
+
+            if (currentApplication == null) {
+                currentApplication = client.instantiate(Application.class);
+                currentApplication.setName(applicationName);
+                currentApplication = client.getCurrentTenant()
+                        .createApplication(Applications.newCreateRequestFor(currentApplication).createDirectory().build());
+            }
+
+            return currentApplication;
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return null;
+    }
 
 }
