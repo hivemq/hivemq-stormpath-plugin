@@ -1,0 +1,5 @@
+/target/
+/.idea/libraries/
+/.idea/cssxfire.xml
+/.idea/workspace.xml
+.DS_Store
