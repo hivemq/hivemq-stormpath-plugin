@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package callbacks;
+package com.dcsquare.hivemq.plugin.stormpathplugin.callbacks;
 
 import com.dcsquare.hivemq.spi.callback.CallbackPriority;
 import com.dcsquare.hivemq.spi.callback.exception.AuthenticationException;
@@ -47,6 +47,7 @@ public class Authentication implements OnAuthenticationCallback {
     }
 
     @Override
+    //@Cached(timeToLive = 5, timeUnit = TimeUnit.MINUTES)
     public Boolean checkCredentials(ClientCredentialsData clientData) throws AuthenticationException {
 
         String username;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package plugin;
+package com.dcsquare.hivemq.plugin.stormpathplugin;
 
-import callbacks.Authentication;
-import callbacks.Authorization;
+import com.dcsquare.hivemq.plugin.stormpathplugin.callbacks.Authentication;
+import com.dcsquare.hivemq.plugin.stormpathplugin.callbacks.Authorization;
 import com.dcsquare.hivemq.spi.PluginEntryPoint;
 import com.dcsquare.hivemq.spi.callback.registry.CallbackRegistry;
 

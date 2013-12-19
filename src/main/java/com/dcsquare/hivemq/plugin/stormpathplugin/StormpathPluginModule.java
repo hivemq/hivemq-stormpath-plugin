@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package plugin;
+package com.dcsquare.hivemq.plugin.stormpathplugin;
 
 import com.dcsquare.hivemq.spi.HiveMQPluginModule;
 import com.dcsquare.hivemq.spi.PluginEntryPoint;
@@ -78,7 +78,10 @@ public class StormpathPluginModule extends HiveMQPluginModule {
             final Tenant tenant = client.getCurrentTenant();
             Application application = null;
 
-            final ApplicationList applications = tenant.getApplications(Applications.where(Applications.name().eqIgnoreCase(applicationName)));
+            final ApplicationList applications = tenant.getApplications(Applications
+                    .where(Applications.name().eqIgnoreCase(applicationName)));
+
+            // Iterator is necessary, to check if the ApplicationsList is empty, because there's no size() method or something equal, in the ApplicationsList class.
             final Iterator<Application> iterator = applications.iterator();
 
             if (iterator.hasNext()) {

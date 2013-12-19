@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package callbacks;
+package com.dcsquare.hivemq.plugin.stormpathplugin.callbacks;
 
 import com.dcsquare.hivemq.spi.callback.CallbackPriority;
 import com.dcsquare.hivemq.spi.callback.security.OnAuthorizationCallback;
@@ -34,6 +34,11 @@ import java.util.List;
 /**
  * @author Lukas Brandl
  */
+
+/*
+    The Authorization uses the groups, that the Accounts are assigned to,
+    to define the permissions. Therefor the group names are interpreted as the permitted Topic.
+ */
 public class Authorization implements OnAuthorizationCallback {
 
     Application application;
@@ -44,23 +49,30 @@ public class Authorization implements OnAuthorizationCallback {
     }
 
     @Override
-//    @Cached(timeToLive = 10, timeUnit = TimeUnit.MINUTES)
+    //@Cached(timeToLive = 10, timeUnit = TimeUnit.MINUTES)
     public List<MqttTopicPermission> getPermissionsForClient(ClientData clientData) {
         Account account = null;
 
-        AccountList accountList = application.getAccounts(Accounts.where(Accounts.username().eqIgnoreCase(clientData.getUsername().get())));
-        Iterator<Account> iterator = accountList.iterator();
+        AccountList accountList = application.getAccounts(Accounts
+                .where(Accounts.username().eqIgnoreCase(clientData.getUsername().get())));
+
+        // Iterator is necessary, because there's no size() in the ApplicationsList class and the AccountList could be empty,
+        // if the username changes while the client is still connected.
+        final Iterator<Account> iterator = accountList.iterator();
         if (iterator.hasNext()) {
             account = iterator.next();
         }
 
-        List<MqttTopicPermission> mqttTopicPermissions = new ArrayList<MqttTopicPermission>();
+        final List<MqttTopicPermission> mqttTopicPermissions = new ArrayList<MqttTopicPermission>();
         if (account != null) {
             for (Group group : account.getGroups()) {
                 mqttTopicPermissions.add(new MqttTopicPermission(group.getName()));
             }
         }
 
+        if (mqttTopicPermissions.isEmpty()) {
+            return null;
+        }
         return mqttTopicPermissions;
     }
 
