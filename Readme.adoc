@@ -4,100 +4,72 @@
 
 == Description
 
-The S Plugin is the first plugin, which adds the capability of client authentication to HiveMQ. In the case of this plugin the credentials consist of username and password and are read from a file.
+The Stormpath Plugin enables HiveMQ to use the Stormpath authentication framework, for the easy authentication and authorization, of MQTT clients. For this purpose the credentials are set in the Stormpath accounts and there permissions are set as groups.
+
+Stormpath is a user management API for developers, that handles: identity management, user management, and security for applications.
+
 
 == How to use the plugin with sample configuration
 
 . Copy the jar file to your +<HIVEMQ_HOME>/plugins+ folder
-. Copy configuration files
-..  +sample-configuration/fileAuthConfiguration.properites+ into your +<HIVEMQ_HOME>/plugins+ folder
-..  +sample-configuration/credentials.properites+ into your +<HIVEMQ_HOME>/plugins+ folder
-. Run HiveMQ
-. Connect with a {hivemq-blog-tools}[MQTT client] of your choice using username: +hivemq-user1+ and password: +user1+
+. Set the Stormpath properties in the stormpath.properties file
+..  Copy your apiKey.id and your apiKey.secret into the stormpath.properties
+..  Set your application name
+. Run HiveMQ (Stormpath application and default path are created automatically)
+. Setup your Stormpath application
+..  Create accounts to set the authentication credentials(Username and Password)
+..  Create groups and add your accounts to the these groups
+..  The name of each Group is defined as a permitted topic
+. Connect with a {hivemq-blog-tools}[MQTT client] of your choice using the username and password set in Stormpath
 . Done!
 
 
+NOTE: *This example shows how to setup your Stormpath application for the plugin.*
 
-NOTE: This sample installation shows a simple and quick way to get started with the plugin. Therefore the pre-configuration uses no hashing for the passwords and has predefined username/password combinations. If you are using this plugin in production a more secure setup is essential. The various configuration options are explained in the following.
+#1. If you don´t have a Strompath account already, register and get an apikey.#
 
-== Configuration Options
+#2. Set your stormpath properties.#
 
-The plugin can be configured with the +fileAuthConfiguration.properties+ file, which needs to be placed in the plugin folder next to the jar file.
-
-[cols="1m,1,2" options="header"]
-.Configuration Options 
+[cols="1,1,1" options="header"]
+.Stormpath properties.
 |===
-|Name
-|Default
-|Description
+|stormpath.apiKey.id:
+|stormpath.apiKey.secret:
+|stormpath.application.name:
 
-
-|filename
-|credentials.properties
-|This property specifies the name of the file, which contains the credentials of the users. Please notice that the file has to be in the plugins folder.
-
-|reloadCredentialsInterval.seconds
-|10
-|Returns the interval after which the credentials file is checked, if new credentials were added.
-
-
-|passwordHashing.enabled
-|false
-|Specifies if the password is stored in plaintext or as hash. If this is set to false all other configuration properties except +filename+ and +reloadCredentialsInterval.seconds+ are ignored.
-
-
-|passwordHashing.algorithm
-|SHA-512
-|Here the hashing algorithm used during the creation of the passwords can be declared. HiveMQ is supporting all hashing algorithms provided by the Java Virtual Maschine (MD2, MD5, SHA, SHA-256, SHA-384, SHA-512). Recommended for use is SHA-256 and above, because the others are not considered secure.
-
-
-|passwordHashing.iterations
-|1000000
-|Customizes the number of hashing iterations used.
-
-
-|passwordHashingSalt.enabled
-|true
-|Configures if a salt has been used during the hash generation. If this is set to false the following options are ignored.
-
-
-|passwordHashingSalt.separationChar
-|$
-|Defines the character used in the credential file to separate the salt from the hash.
-
-
-|passwordHashingSalt.isFirst
-|true
-|Specifies the order of hash and salt. If this is set to true, the salt is in front of the hash (salt$hash), if this option is false the salt is placed after the hash (hash$salt)
+|"your apikey id"
+|"your apikey secret"
+|HiveMQ
 
 |===
 
-== Credentials
+#3. Create a new account.#
 
-The second file needed for the plugin to work successfully is the credentials file, which is a Java Property File. So in each line one username/password combination can be specified. Depending on the configuration options a line looks like one of the following:
+[cols="4,3,3,3,3,3,3" options="header"]
+.Account.
+|===
+|Directory
+|Username
+|First Name
+|Middle Name
+|Last Name
+|E-mail
+|Password
 
-* username:plaintextpassword
-* username:hashedpassword
-* username:hashedpassword[separator][salt]
-* username:[salt][separator]hashedpassword
+|HiveMQ Directory
+|DeviceA
+|Device
+|Type
+|A
+|DeviceA@HiveMQ.com
+|deviceA123
+|===
 
-NOTE: It is not possible to specify different formats for passwords of different users in one file, therefore all lines must contain the same format.
+#4. Create a new group named "testtopic/#".#
 
-== Production-ready Configuration
+#5. Add the DeviceA account to the testtopic/# Group.#
 
-The displayed configuration shows a production-ready implementation, which uses SHA 512, 1 million iterations and salting.
-[source,xml]
-.Using strong hashing parameters
-----
-passwordHashing.enabled=true
-passwordHashing.algorithm=SHA-512
-passwordHashing.iterations=1000000
-passwordHashingSalt.enabled=true
-passwordHashingSalt.isFirst=true
-----
+#6. Connect with  Username = DeviceA, Password = deviceA123.#
 
-== Create and Modify the credential file
+#7. Now the Client can only publish or subscribe to topics starting with testtopic/#
 
-After having copied this configuration into the +fileAuthConfiguration.properties+, the credential file has to be improved, too. Now as hashing and salting is enabled the passwords have to be stored in same format.
-
-This can be done easily with our provided utility. For more information see the https://github.com/hivemq/file-auth-plugin-utility[GitHub repo].

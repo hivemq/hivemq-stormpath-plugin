@@ -20,6 +20,7 @@ import com.dcsquare.hivemq.spi.callback.CallbackPriority;
 import com.dcsquare.hivemq.spi.callback.security.OnAuthorizationCallback;
 import com.dcsquare.hivemq.spi.security.ClientData;
 import com.dcsquare.hivemq.spi.topic.MqttTopicPermission;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountList;
@@ -44,13 +45,27 @@ public class Authorization implements OnAuthorizationCallback {
     Application application;
 
     @Inject
-    public Authorization(Application application) {
+    Authorization(Application application) {
         this.application = application;
     }
 
     @Override
     //@Cached(timeToLive = 10, timeUnit = TimeUnit.MINUTES)
     public List<MqttTopicPermission> getPermissionsForClient(ClientData clientData) {
+        Account account = getAccount(clientData);
+
+        final List<MqttTopicPermission> mqttTopicPermissions = new ArrayList<MqttTopicPermission>();
+        if (account != null) {
+            for (Group group : account.getGroups()) {
+                mqttTopicPermissions.add(new MqttTopicPermission(group.getName()));
+            }
+        }
+
+        return mqttTopicPermissions;
+    }
+
+    @VisibleForTesting
+    Account getAccount(ClientData clientData) {
         Account account = null;
 
         AccountList accountList = application.getAccounts(Accounts
@@ -63,17 +78,7 @@ public class Authorization implements OnAuthorizationCallback {
             account = iterator.next();
         }
 
-        final List<MqttTopicPermission> mqttTopicPermissions = new ArrayList<MqttTopicPermission>();
-        if (account != null) {
-            for (Group group : account.getGroups()) {
-                mqttTopicPermissions.add(new MqttTopicPermission(group.getName()));
-            }
-        }
-
-        if (mqttTopicPermissions.isEmpty()) {
-            return null;
-        }
-        return mqttTopicPermissions;
+        return account;
     }
 
     @Override

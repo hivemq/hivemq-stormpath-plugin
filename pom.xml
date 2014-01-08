@@ -4,10 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dcsquare.plugin</groupId>
-    <artifactId>plugin</artifactId>
+    <artifactId>stormpath-plugin</artifactId>
     <version>1.0</version>
 
-    <description>HiveMQ Hello World Plugin - a reference for all plugin developer</description>
+    <description>Strompath Plugin</description>
+
+    <properties>
+        <stormpath.version>0.9.1</stormpath.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -18,13 +22,24 @@
         <dependency>
             <groupId>com.stormpath.sdk</groupId>
             <artifactId>stormpath-sdk-api</artifactId>
-            <version>0.9.1</version>
+            <version>${stormpath.version}</version>
         </dependency>
         <dependency>
             <groupId>com.stormpath.sdk</groupId>
             <artifactId>stormpath-sdk-httpclient</artifactId>
-            <version>0.9.1</version>
+            <version>${stormpath.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.5</version>
         </dependency>
     </dependencies>
 
@@ -51,9 +66,10 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Implementation-Version>0.9.1</Implementation-Version>:
+                                        <Implementation-Version>${stormpath.version}</Implementation-Version>:
                                         <Implementation-Vendor-Id>com.stormpath.sdk</Implementation-Vendor-Id>
                                     </manifestEntries>
                                 </transformer>
@@ -76,6 +92,32 @@
 
     <profiles>
         <profile>
+            <id>Packaging</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>assembly.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
             <id>RunWithHiveMQ</id>
             <build>
                 <plugins>
@@ -91,7 +133,7 @@
                                     <goal>hivemq</goal>
                                 </goals>
                                 <configuration>
-                                    <hiveMQDir>/Applications/hivemq-1.4.3</hiveMQDir>
+                                    <hiveMQDir>/Applications/hivemq-Development-Snapshot</hiveMQDir>
                                     <debugMode>
                                         SERVER
                                     </debugMode>
