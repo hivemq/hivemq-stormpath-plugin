@@ -10,7 +10,7 @@
     <description>Strompath Plugin</description>
 
     <properties>
-        <stormpath.version>0.9.1</stormpath.version>
+        <stormpath.version>0.9.3</stormpath.version>
     </properties>
 
     <dependencies>
