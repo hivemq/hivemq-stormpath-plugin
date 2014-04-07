@@ -37,15 +37,15 @@ import java.util.List;
  */
 
 /*
-    The Authorization uses the groups, that the Accounts are assigned to,
-    to define the permissions. Therefor the group names are interpreted as the permitted Topic.
+    The Authorization uses the Stormpath groups, that the Accounts are assigned to,
+    to define the permissions. The group names are interpreted as the permitted Topic.
  */
 public class Authorization implements OnAuthorizationCallback {
 
     Application application;
 
     @Inject
-    Authorization(Application application) {
+    Authorization(final Application application) {
         this.application = application;
     }
 

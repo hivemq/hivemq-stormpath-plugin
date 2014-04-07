@@ -52,7 +52,7 @@ public class StormpathPluginModule extends HiveMQPluginModule {
 
     @Override
     public Provider<Iterable<? extends AbstractConfiguration>> getConfigurations() {
-        return newConfigurationProvider(newReloadablePropertiesConfiguration("stormpathPlugin.properties", 5, TimeUnit.MINUTES));
+        return newConfigurationProvider(newReloadablePropertiesConfiguration("stormpath.properties", 5, TimeUnit.MINUTES));
     }
 
     @Override
@@ -97,7 +97,7 @@ public class StormpathPluginModule extends HiveMQPluginModule {
 
             return application;
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.error("An error occured while authenticating with Stormpath", e);
         }
         return null;
     }

@@ -34,14 +34,14 @@ public class StormpathPluginEntryPoint extends PluginEntryPoint {
     protected final Authorization authorization;
 
     @Inject
-    public StormpathPluginEntryPoint(Authentication authentication, Authorization authorization) {
+    public StormpathPluginEntryPoint(final Authentication authentication, final Authorization authorization) {
         this.authentication = authentication;
         this.authorization = authorization;
     }
 
     @PostConstruct
     public void postConstruct() {
-        CallbackRegistry callbackRegistry = getCallbackRegistry();
+        final CallbackRegistry callbackRegistry = getCallbackRegistry();
         callbackRegistry.addCallback(authentication);
         callbackRegistry.addCallback(authorization);
 
