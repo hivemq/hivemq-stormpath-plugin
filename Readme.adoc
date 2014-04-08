@@ -4,7 +4,7 @@
 
 == Description
 
-The Stormpath Plugin enables HiveMQ to use the Stormpath authentication framework, for the easy authentication and authorization, of MQTT clients. For this purpose the credentials are set in the Stormpath accounts and there permissions are set as groups.
+The Stormpath Plugin enables HiveMQ to use the Stormpath authentication and authorization API for the easy to setup authentication and authorization of MQTT clients. For this purpose the client credentials are stored Stormpath accounts and permissions configured as groups in Stormpath.
 
 Stormpath is a user management API for developers, that handles: identity management, user management, and security for applications.
 
@@ -26,9 +26,12 @@ Stormpath is a user management API for developers, that handles: identity manage
 
 NOTE: *This example shows how to setup your Stormpath application for the plugin.*
 
-#1. If you don´t have a Strompath account already, register and get an apikey.#
 
-#2. Set your stormpath properties.#
+
+== Stormpath Setup
+. If you don´t have a Stormpath account already, register and get an API key.
+
+. Set your stormpath.properties.
 
 [cols="1,1,1" options="header"]
 .Stormpath properties.
@@ -43,7 +46,7 @@ NOTE: *This example shows how to setup your Stormpath application for the plugin
 
 |===
 
-#3. Create a new account.#
+. Create a new account.
 
 [cols="4,3,3,3,3,3,3" options="header"]
 .Account.
@@ -65,11 +68,11 @@ NOTE: *This example shows how to setup your Stormpath application for the plugin
 |deviceA123
 |===
 
-#4. Create a new group named "testtopic/#".#
+. Create a new group named "testtopic/#".
 
-#5. Add the DeviceA account to the testtopic/# Group.#
+. Add the DeviceA account to the testtopic/# Group.
 
-#6. Connect with  Username = DeviceA, Password = deviceA123.#
+. Connect with  Username = DeviceA, Password = deviceA123.
 
-#7. Now the Client can only publish or subscribe to topics starting with testtopic/#
+. Now the Client can only publish or subscribe to topics starting with testtopic/#
 
