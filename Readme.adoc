@@ -31,7 +31,19 @@ NOTE: *This example shows how to setup your Stormpath application for the plugin
 == Stormpath Setup
 . If you don´t have a Stormpath account already, register and get an API key.
 
-. Set your stormpath.properties.
+. Set your stormpath.properties. (See Table 1)
+
+. Create a new account. (See Table 2)
+
+. Create a new group named "testtopic/#".
+
+. Add the DeviceA account to the testtopic/# Group.
+
+. Connect with  Username = DeviceA, Password = deviceA123.
+
+. Now the Client can only publish or subscribe to topics starting with testtopic/#
+
+
 
 [cols="1,1,1" options="header"]
 .Stormpath properties.
@@ -45,8 +57,6 @@ NOTE: *This example shows how to setup your Stormpath application for the plugin
 |HiveMQ
 
 |===
-
-. Create a new account.
 
 [cols="4,3,3,3,3,3,3" options="header"]
 .Account.
@@ -67,12 +77,3 @@ NOTE: *This example shows how to setup your Stormpath application for the plugin
 |DeviceA@HiveMQ.com
 |deviceA123
 |===
-
-. Create a new group named "testtopic/#".
-
-. Add the DeviceA account to the testtopic/# Group.
-
-. Connect with  Username = DeviceA, Password = deviceA123.
-
-. Now the Client can only publish or subscribe to topics starting with testtopic/#
-
