@@ -77,3 +77,12 @@ NOTE: *This example shows how to setup your Stormpath application for the plugin
 |DeviceA@HiveMQ.com
 |deviceA123
 |===
+
+= Contributing
+
+If you want to contribute to HiveMQ Stormpath Plugin, see the link:CONTRIBUTING.md[contribution guidelines].
+
+= License
+
+HiveMQ Stormpath Plugin is licensed under the `APACHE LICENSE, VERSION 2.0`. A copy of the license can be found link:LICENSE.txt[here].
+
